@@ -1,7 +1,7 @@
 import { ArrowUpRight, FolderGit2, ImageOff } from "lucide-react";
 import { useState } from "react";
 
-export default function ProjectCard({ project, onSelect }) {
+export default function ProjectCard({ project, onSelect, noPreviewLabel }) {
   const [imgError, setImgError] = useState(false);
 
   return (
@@ -10,19 +10,17 @@ export default function ProjectCard({ project, onSelect }) {
       className="group flex cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/60 transition hover:-translate-y-1 hover:border-emerald-500/50 hover:bg-slate-900"
     >
       <div>
-        {/* Area Preview Screenshot */}
         <div className="relative aspect-video w-full overflow-hidden border-b border-slate-800 bg-slate-950">
           {project.image && !imgError ? (
             <img src={project.image} alt={`Preview ${project.title}`} onError={() => setImgError(true)} className="h-full w-full object-cover object-top transition duration-300 group-hover:scale-105" />
           ) : (
             <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-slate-900 to-slate-950 text-slate-600">
               <ImageOff className="h-7 w-7" />
-              <span className="text-xs">Preview belum tersedia</span>
+              <span className="text-xs">{noPreviewLabel}</span>
             </div>
           )}
         </div>
 
-        {/* Konten Teks Kartu */}
         <div className="p-6 pb-0">
           <div className="flex items-center justify-between">
             <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400">
@@ -38,7 +36,6 @@ export default function ProjectCard({ project, onSelect }) {
         </div>
       </div>
 
-      {/* Tech Stack Tags */}
       <div className="mt-6 flex flex-wrap gap-2 p-6 pt-0">
         {project.techStack.map((tech) => (
           <span key={tech} className="rounded-md border border-slate-800 bg-slate-950 px-2.5 py-1 text-xs font-medium text-slate-300">

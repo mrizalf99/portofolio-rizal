@@ -1,8 +1,8 @@
-export default function Skills({ categories }) {
+export default function Skills({ categories, labels }) {
   return (
     <section id="skills" className="mx-auto max-w-5xl px-6 py-16">
-      <h2 className="text-2xl font-bold text-white md:text-3xl">Tech Stack & Keahlian</h2>
-      <p className="mt-2 text-sm text-slate-400">Teknologi yang saya gunakan dalam pengembangan aplikasi web dari kuliah hingga sekarang.</p>
+      <h2 className="text-2xl font-bold text-white md:text-3xl">{labels.title}</h2>
+      <p className="mt-2 text-sm text-slate-400">{labels.subtitle}</p>
 
       <div className="mt-8 grid gap-6 md:grid-cols-3">
         {categories.map((cat) => (

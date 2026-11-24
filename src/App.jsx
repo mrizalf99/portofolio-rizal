@@ -5,32 +5,41 @@ import Navbar from "./components/Navbar";
 import ProjectCard from "./components/ProjectCard";
 import ProjectModal from "./components/ProjectModal";
 import Skills from "./components/Skills";
-import { profileData, projectsData, skillCategories } from "./data/projects";
+import { translations } from "./data/projects";
 
 export default function App() {
-  const [selectedCategory, setSelectedCategory] = useState("Semua");
-  const [activeProject, setActiveProject] = useState(null);
+  const [lang, setLang] = useState("id");
+  const [selectedCategory, setSelectedCategory] = useState("ALL");
+  const [activeProjectId, setActiveProjectId] = useState(null);
 
-  const categories = ["Semua", ...new Set(projectsData.map((p) => p.category))];
+  const content = translations[lang];
+  const { profile, projects, skillCategories } = content;
 
-  const filteredProjects = selectedCategory === "Semua" ? projectsData : projectsData.filter((p) => p.category === selectedCategory);
+  const categories = ["ALL", ...new Set(projects.map((p) => p.category))];
+
+  const filteredProjects = selectedCategory === "ALL" ? projects : projects.filter((p) => p.category === selectedCategory);
+
+  const activeProject = projects.find((p) => p.id === activeProjectId) || null;
+
+  const handleLanguageChange = (newLang) => {
+    setLang(newLang);
+    setSelectedCategory("ALL");
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-emerald-500/30 selection:text-emerald-200">
-      <Navbar name={profileData.name} />
+      <Navbar name={profile.name} labels={content.nav} lang={lang} setLang={handleLanguageChange} />
 
       <main>
-        <Hero profile={profileData} />
+        <Hero profile={profile} labels={content.hero} />
 
-        {/* Section Proyek */}
         <section id="projects" className="mx-auto max-w-5xl px-6 py-16">
           <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div>
-              <h2 className="text-2xl font-bold text-white md:text-3xl">Proyek Pilihan</h2>
-              <p className="mt-2 text-sm text-slate-400">Klik kartu proyek untuk melihat studi kasus, masalah teknis, dan fitur yang dibangun.</p>
+              <h2 className="text-2xl font-bold text-white md:text-3xl">{content.projectsSection.title}</h2>
+              <p className="mt-2 text-sm text-slate-400">{content.projectsSection.subtitle}</p>
             </div>
 
-            {/* Filter Kategori */}
             <div className="flex flex-wrap gap-2">
               {categories.map((cat) => (
                 <button
@@ -38,7 +47,7 @@ export default function App() {
                   onClick={() => setSelectedCategory(cat)}
                   className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition ${selectedCategory === cat ? "bg-emerald-500 text-slate-950" : "border border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-700"}`}
                 >
-                  {cat}
+                  {cat === "ALL" ? content.projectsSection.allCategory : cat}
                 </button>
               ))}
             </div>
@@ -46,17 +55,17 @@ export default function App() {
 
           <div className="mt-8 grid gap-6 md:grid-cols-2">
             {filteredProjects.map((project) => (
-              <ProjectCard key={project.id} project={project} onSelect={(proj) => setActiveProject(proj)} />
+              <ProjectCard key={project.id} project={project} onSelect={(proj) => setActiveProjectId(proj.id)} noPreviewLabel={content.projectsSection.noPreview} />
             ))}
           </div>
         </section>
 
-        <Skills categories={skillCategories} />
+        <Skills categories={skillCategories} labels={content.skillsSection} />
       </main>
 
-      <Footer profile={profileData} />
+      <Footer profile={profile} labels={content.footer} />
 
-      <ProjectModal project={activeProject} onClose={() => setActiveProject(null)} />
+      <ProjectModal project={activeProject} onClose={() => setActiveProjectId(null)} labels={content.modal} />
     </div>
   );
 }
